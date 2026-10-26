@@ -21,11 +21,77 @@ jobs:
       with:
         packages: platforms;android-33 build-tools;33.0.2 platform-tools
 
-    - name: Build Debug APK
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Generate Gradle configuration files
       run: |
+        # Root settings.gradle
         echo "include ':app'" > settings.gradle
-        chmod +x gradlew || true
-        ./gradlew assembleDebug || ./gradlew app:assembleDebug
+
+        # Root build.gradle
+        cat << 'EOF' > build.gradle
+        buildscript {
+            repositories {
+                google()
+                mavenCentral()
+            }
+            dependencies {
+                classpath "com.android.tools.build:gradle:8.1.1"
+                classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+            }
+        }
+        allprojects {
+            repositories {
+                google()
+                mavenCentral()
+            }
+        }
+        EOF
+
+        # App-level build.gradle
+        mkdir -p app
+        cat << 'EOF' > app/build.gradle
+        plugins {
+            id 'com.android.application'
+            id 'org.jetbrains.kotlin.android'
+        }
+
+        android {
+            namespace 'com.puntomira'
+            compileSdk 33
+
+            defaultConfig {
+                applicationId "com.puntomira"
+                minSdk 21
+                targetSdk 33
+                versionCode 1
+                versionName "1.0"
+            }
+
+            buildTypes {
+                release {
+                    minifyEnabled false
+                }
+            }
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_17
+                targetCompatibility JavaVersion.VERSION_17
+            }
+            kotlinOptions {
+                jvmTarget = '17'
+            }
+        }
+
+        dependencies {
+            implementation 'androidx.core:core-ktx:1.10.1'
+            implementation 'androidx.appcompat:appcompat:1.6.1'
+            implementation 'com.google.android.material:material:1.9.0'
+        }
+        EOF
+
+    - name: Build Debug APK
+      run: gradle assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
