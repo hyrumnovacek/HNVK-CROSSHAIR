@@ -18,8 +18,8 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-        with:
-    packages: platforms;android-33 build-tools;33.0.2 platform-tools
+      with:
+        packages: platforms;android-33 build-tools;33.0.2 platform-tools
 
     - name: Build Debug APK
       run: |
