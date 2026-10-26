@@ -19,7 +19,7 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
-        packages: platforms;android-33 build-tools;33.0.2 platform-tools
+        packages: platforms;android-34 build-tools;34.0.0 platform-tools
 
     - name: Download and Setup Gradle 7.5
       run: |
@@ -32,7 +32,7 @@ jobs:
         # Root settings.gradle
         echo "include ':app'" > settings.gradle
 
-        # Root gradle.properties (¡Aquí habilitamos AndroidX!)
+        # Root gradle.properties
         cat << 'EOF' > gradle.properties
         android.useAndroidX=true
         android.enableJetifier=true
@@ -58,7 +58,7 @@ jobs:
         }
         EOF
 
-        # App-level build.gradle
+        # App-level build.gradle actualizado a SDK 34
         mkdir -p app
         cat << 'EOF' > app/build.gradle
         plugins {
@@ -68,12 +68,12 @@ jobs:
 
         android {
             namespace 'com.puntomira'
-            compileSdk 33
+            compileSdk 34
 
             defaultConfig {
                 applicationId "com.puntomira"
                 minSdk 21
-                targetSdk 33
+                targetSdk 34
                 versionCode 1
                 versionName "1.0"
             }
