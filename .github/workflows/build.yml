@@ -36,8 +36,8 @@ jobs:
                 mavenCentral()
             }
             dependencies {
-                classpath "com.android.tools.build:gradle:8.0.0"
-                classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20"
+                classpath "com.android.tools.build:gradle:7.4.2"
+                classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10"
             }
         }
         allprojects {
@@ -74,23 +74,23 @@ jobs:
                 }
             }
             compileOptions {
-                sourceCompatibility JavaVersion.VERSION_17
-                targetCompatibility JavaVersion.VERSION_17
+                sourceCompatibility JavaVersion.VERSION_11
+                targetCompatibility JavaVersion.VERSION_11
             }
             kotlinOptions {
-                jvmTarget = '17'
+                jvmTarget = '11'
             }
         }
 
         dependencies {
-            implementation 'androidx.core:core-ktx:1.10.1'
+            implementation 'androidx.core:core-ktx:1.9.0'
             implementation 'androidx.appcompat:appcompat:1.6.1'
-            implementation 'com.google.android.material:material:1.9.0'
+            implementation 'com.google.android.material:material:1.8.0'
         }
         EOF
 
-        # Generate Gradle Wrapper
-        gradle wrapper --gradle-version 8.0
+        # Generate Gradle Wrapper for version 7.5
+        gradle wrapper --gradle-version 7.5
         chmod +x gradlew
 
     - name: Build Debug APK
