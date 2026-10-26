@@ -32,6 +32,12 @@ jobs:
         # Root settings.gradle
         echo "include ':app'" > settings.gradle
 
+        # Root gradle.properties (¡Aquí habilitamos AndroidX!)
+        cat << 'EOF' > gradle.properties
+        android.useAndroidX=true
+        android.enableJetifier=true
+        EOF
+
         # Root build.gradle
         cat << 'EOF' > build.gradle
         buildscript {
@@ -52,7 +58,7 @@ jobs:
         }
         EOF
 
-        # App-level build.gradle con dependencias ampliadas
+        # App-level build.gradle
         mkdir -p app
         cat << 'EOF' > app/build.gradle
         plugins {
@@ -111,7 +117,7 @@ jobs:
         chmod +x gradlew
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
+      run: ./gradlew assembleDebug --console=plain
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
