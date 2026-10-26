@@ -21,10 +21,14 @@ jobs:
       with:
         packages: platforms;android-33 build-tools;33.0.2 platform-tools
 
-    - name: Install Gradle and Generate Project Files
+    - name: Download and Setup Gradle 7.5
       run: |
-        sudo apt-get update && sudo apt-get install -y gradle
+        wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
+        unzip -q gradle-7.5-bin.zip
+        echo "$PWD/gradle-7.5/bin" >> $GITHUB_PATH
 
+    - name: Generate Project Files
+      run: |
         # Root settings.gradle
         echo "include ':app'" > settings.gradle
 
@@ -89,7 +93,17 @@ jobs:
         }
         EOF
 
-        # Generate Gradle Wrapper for version 7.5
+        # Generate Gradle Wrapper pointing directly to 7.5
+        mkdir -p gradle/wrapper
+        cat << 'EOF' > gradle/wrapper/gradle-wrapper.properties
+        distributionBase=GRADLE_USER_HOME
+        distributionPath=wrapper/dists
+        distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip
+        networkTimeout=10000
+        validateDistributionUrl=true
+        zipStoreBase=GRADLE_USER_HOME
+        zipStorePath=wrapper/dists
+        EOF
         gradle wrapper --gradle-version 7.5
         chmod +x gradlew
 
