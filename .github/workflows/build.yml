@@ -52,7 +52,7 @@ jobs:
         }
         EOF
 
-        # App-level build.gradle
+        # App-level build.gradle con dependencias ampliadas
         mkdir -p app
         cat << 'EOF' > app/build.gradle
         plugins {
@@ -90,6 +90,9 @@ jobs:
             implementation 'androidx.core:core-ktx:1.9.0'
             implementation 'androidx.appcompat:appcompat:1.6.1'
             implementation 'com.google.android.material:material:1.8.0'
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+            implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
         }
         EOF
 
@@ -108,7 +111,7 @@ jobs:
         chmod +x gradlew
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --info
+      run: ./gradlew assembleDebug --stacktrace
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
