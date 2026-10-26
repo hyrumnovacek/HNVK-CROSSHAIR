@@ -21,8 +21,10 @@ jobs:
       with:
         packages: platforms;android-33 build-tools;33.0.2 platform-tools
 
-    - name: Generate Project Files & Gradle Wrapper
+    - name: Install Gradle and Generate Project Files
       run: |
+        sudo apt-get update && sudo apt-get install -y gradle
+
         # Root settings.gradle
         echo "include ':app'" > settings.gradle
 
@@ -87,19 +89,7 @@ jobs:
         }
         EOF
 
-        # Create Gradle Wrapper for version 8.0 (Compatible)
-        mkdir -p gradle/wrapper
-        cat << 'EOF' > gradle/wrapper/gradle-wrapper.properties
-        distributionBase=GRADLE_USER_HOME
-        distributionPath=wrapper/dists
-        distributionUrl=https\://services.gradle.org/distributions/gradle-8.0-bin.zip
-        networkTimeout=10000
-        validateDistributionUrl=true
-        zipStoreBase=GRADLE_USER_HOME
-        zipStorePath=wrapper/dists
-        EOF
-
-        # Download gradle wrapper script or generate it
+        # Generate Gradle Wrapper
         gradle wrapper --gradle-version 8.0
         chmod +x gradlew
 
